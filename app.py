@@ -37,6 +37,7 @@ def index():
             headers = "Product, Customer Name, Rating, Heading, Comment \n"
             fw.write(headers)
             reviews = []
+            reviews_1=[]
             for commentbox in commentboxes:
                 try:
                     #name.encode(encoding='utf-8')
@@ -62,19 +63,32 @@ def index():
                 try:
                     comtag = commentbox.div.div.find_all('div', {'class': ''})
                     #custComment.encode(encoding='utf-8')
-                    custComment = comtag[0].div.text
+                    #custComment = comtag[0].div.text
+                    custComment=commentbox.div.div.find_all('div',{'class':'row'})[1].text
                 except Exception as e:
                     print("Exception while creating dictionary: ",e)
 
-                mydict = {"Product": searchString, "Name": name, "Rating": rating, "CommentHead": commentHead,
-                          "Comment": custComment}
+                    mydict = {"Product": searchString, "Name": name, "Rating": rating, "CommentHead": commentHead,
+                            "Comment": custComment}
+                    mydict_1=[searchString, name,  rating, commentHead, custComment]
                 reviews.append(mydict)
+                reviews_1.append(mydict_1)
+            print(reviews)
+            for i in reviews_1:
+                k=i[0]
+                for j in i[1:]:
+                    k=k+","+str(j)
+                print(k)
+                fw.write(str(k+"\n"))
+            
+        
             return render_template('results.html', reviews=reviews[0:(len(reviews)-1)])
+                          
         except Exception as e:
             print('The Exception message is: ',e)
             return 'something is wrong'
     # return render_template('results.html')
-
+    
     else:
         return render_template('index.html')
 
